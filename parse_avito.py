@@ -42,6 +42,17 @@ def data_write_to_json(file, data_to_write):
         print("Error: File does not appear to exist WRITE.")
         return False
 
+# read file and return data
+def data_read_from_json(file):
+    try:
+        with open(file, 'r') as f:
+            return json.load(f)
+
+    except IOError:
+        # Error
+        print("Error: File does not appear to exist READ.")
+        return False
+
 # init start script
 # if __name__ == '__main__':
 #     promo_soup = html_to_soup(url_avito)
@@ -67,6 +78,8 @@ def scan_by_timer():
 
     promo_array = []
 
+    data_in_file = data_read_from_json('data.json')
+
     # promo in all promo
     for item in promo:
         # id
@@ -83,7 +96,7 @@ def scan_by_timer():
             promo_image = item.select_one('.photo-count-show')['src'][2:]
         else:
             promo_image = 'https://avatars2.githubusercontent.com/u/1342004?v=4&s=200'
-
+                
         # make promo array
         item_array = {
             'id': promo_id,
@@ -95,10 +108,24 @@ def scan_by_timer():
         # add promo array to list promo
         promo_array.append(item_array)
     
+    # check read file
+    # Dont write to file dublicate!!!
+    if data_in_file != False:
+        # for in file
+        for item_file in data_in_file:
+            # for in array. Check all el. in array with el. in file.
+            for item_arr in promo_array:
+                index_arr = 0
+                if int(item_file['id'][1:]) == int(item_arr['id'][1:]):
+                    promo_array.pop(index_arr)
+
+                index_arr += 1
+
     if data_write_to_json('data.json', promo_array) == True:
         print('Data was written!')
     else:
         print('Error while data write!')
+
 
 # add task to timer
 sched.add_job(scan_by_timer, 'interval', minutes=1)
