@@ -45,31 +45,13 @@ def data_write_to_json(file, data_to_write):
 # read file and return data
 def data_read_from_json(file):
     try:
-        with open(file, 'r') as f:
+        with open(file, 'r', encoding='utf-8') as f:
             return json.load(f)
 
     except IOError:
         # Error
         print("Error: File does not appear to exist READ.")
         return False
-
-# init start script
-# if __name__ == '__main__':
-#     promo_soup = html_to_soup(url_avito)
-#     promo = promo_soup.select(".item")
-
-#     # promo in all promo
-#     for item in promo:
-#         promo_header = item.select('.item_table-header')
-
-#         # title with remove \n
-#         promo_title = item.select('.item_table-header a')[0].get_text().strip()
-
-#         # price with remove \n
-#         promo_price = item.select('.item_table-header .about')[0].get_text().strip()
-
-#         print('{}, цена: {}.'.format(promo_title, promo_price))
-
 
 # funct for scan by time
 def scan_by_timer():
